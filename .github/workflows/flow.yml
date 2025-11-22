@@ -21,6 +21,12 @@ jobs:
             fluidattacks/sast:latest \
             sast --strict scan .
 
+          EXIT_CODE=$?
+          if [ $EXIT_CODE -ne 0 ]; then
+            echo "SAST encontró vulnerabilidades o falló el análisis (exit code: $EXIT_CODE)"
+            exit $EXIT_CODE
+          fi
+
   sca-scan:
     name: Fluid Attacks SCA
     runs-on: ubuntu-latest
@@ -35,3 +41,9 @@ jobs:
             -v "$PWD:/src" \
             fluidattacks/sca:latest \
             sca --strict scan .
+
+          EXIT_CODE=$?
+            if [ $EXIT_CODE -ne 0 ]; then
+              echo "SCA encontró vulnerabilidades o falló el análisis (exit code: $EXIT_CODE)"
+              exit $EXIT_CODE
+            fi
