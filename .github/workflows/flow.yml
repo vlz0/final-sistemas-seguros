@@ -1,0 +1,22 @@
+name: SAST Sin Romper
+ 
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+ 
+jobs:
+  sast-scan:
+    name: Fluid Attacks SAST
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run Fluid Attacks SAST
+        id: sast_scan
+        continue-on-error: true
+        run: |
+          docker run --rm \
+            -v "$PWD:/src" \
+            fluidattacks/sast:latest \
+            sast scan /src
