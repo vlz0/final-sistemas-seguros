@@ -19,7 +19,7 @@ jobs:
           docker run --rm \
             -v "$PWD:/src" \
             fluidattacks/sast:latest \
-            sast --strict scan /src
+            sast --strict scan .
 
   sca-scan:
     name: Fluid Attacks SCA
@@ -34,4 +34,4 @@ jobs:
           docker run --rm \
             -v "$PWD:/src" \
             fluidattacks/sca:latest \
-            sca --strict scan /src
+            sca --strict scan .
