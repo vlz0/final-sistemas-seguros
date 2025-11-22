@@ -54,7 +54,7 @@ jobs:
             Fluid-Attacks-Results-sca.csv
             **/*.csv
 
-    trivy-scan:
+  trivy-scan:
     name: Trivy Security Scan
     runs-on: ubuntu-latest
 
