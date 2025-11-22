@@ -53,3 +53,30 @@ jobs:
           path: |
             Fluid-Attacks-Results-sca.csv
             **/*.csv
+
+    trivy-scan:
+    name: Trivy Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Trivy
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y wget
+          wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.50.0_Linux-64bit.deb
+          sudo dpkg -i trivy_0.50.0_Linux-64bit.deb
+
+      - name: Run Trivy Filesystem Scan
+        run: trivy fs --security-checks vuln,misconfig,secret --format json --output trivy-results.json .
+        continue-on-error: true
+
+      - name: Upload Trivy Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-security-report
+          path: trivy-results.json
+          retention-days: 30
