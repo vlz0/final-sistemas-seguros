@@ -14,18 +14,11 @@ jobs:
         uses: actions/checkout@v4
       - name: Run Fluid Attacks SAST
         id: sast_scan
-        continue-on-error: true
         run: |
           docker run --rm \
             -v "$PWD:/src" \
             fluidattacks/sast:latest \
             sast --strict scan .
-
-          EXIT_CODE=$?
-          if [ $EXIT_CODE -ne 0 ]; then
-            echo "SAST encontró vulnerabilidades o falló el análisis (exit code: $EXIT_CODE)"
-            exit $EXIT_CODE
-          fi
 
   sca-scan:
     name: Fluid Attacks SCA
@@ -35,15 +28,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Run Fluid Attacks SCA
         id: sca_scan
-        continue-on-error: true
         run: |
           docker run --rm \
             -v "$PWD:/src" \
             fluidattacks/sca:latest \
             sca --strict scan .
-
-          EXIT_CODE=$?
-            if [ $EXIT_CODE -ne 0 ]; then
-              echo "SCA encontró vulnerabilidades o falló el análisis (exit code: $EXIT_CODE)"
-              exit $EXIT_CODE
-            fi
