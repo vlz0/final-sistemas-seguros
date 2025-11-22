@@ -21,14 +21,14 @@ jobs:
             fluidattacks/sast:latest \
             sast --strict scan /src/config.yaml
 
+          mv Fluid-Attacks-Results.csv Fluid-Attacks-Results-sast.csv
+
       - name: Upload SAST CSV
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: sast-results
-          path: |
-            Fluid-Attacks-Results-sast.csv
-            **/*.csv
+          path: Fluid-Attacks-Results-sast.csv
 
   sca-scan:
     name: Fluid Attacks SCA
@@ -45,14 +45,14 @@ jobs:
             fluidattacks/sca:latest \
             sca --strict scan /src/config.yaml
 
+          mv Fluid-Attacks-Results.csv Fluid-Attacks-Results-sca.csv
+
       - name: Upload SCA CSV
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: sca-results
-          path: |
-            Fluid-Attacks-Results-sca.csv
-            **/*.csv
+          path: Fluid-Attacks-Results-sca.csv
 
   trivy-scan:
     name: Trivy Security Scan
@@ -70,7 +70,7 @@ jobs:
           sudo dpkg -i trivy_0.50.0_Linux-64bit.deb
 
       - name: Run Trivy Filesystem Scan
-        run: trivy fs --security-checks vuln,misconfig,secret --format json --output trivy-results.json .
+        run: trivy fs --security-checks vuln,misconfig,secret --format json -o trivy-results.json .
         continue-on-error: true
 
       - name: Upload Trivy Report
@@ -79,4 +79,3 @@ jobs:
         with:
           name: trivy-security-report
           path: trivy-results.json
-          retention-days: 30
