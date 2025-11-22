@@ -12,6 +12,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Run Fluid Attacks SAST
         id: sast_scan
         run: |
@@ -20,12 +21,21 @@ jobs:
             fluidattacks/sast:latest \
             sast --strict scan /src/config.yaml
 
+      - name: Upload SAST CSV
+        uses: actions/upload-artifact@v4
+        with:
+          name: sast-results
+          path: |
+            Fluid-Attacks-Results.csv
+            **/*.csv
+
   sca-scan:
     name: Fluid Attacks SCA
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        
       - name: Run Fluid Attacks SCA
         id: sca_scan
         run: |
@@ -33,3 +43,11 @@ jobs:
             -v "$PWD:/src" \
             fluidattacks/sca:latest \
             sca --strict scan /src/config.yaml
+
+      - name: Upload SCA CSV
+        uses: actions/upload-artifact@v4
+        with:
+          name: sca-results
+          path: |
+            Fluid-Attacks-Results.csv
+            **/*.csv
