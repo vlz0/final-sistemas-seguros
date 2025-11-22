@@ -1,4 +1,4 @@
-name: SAST y SCA Romper con dos yml
+name: SAST y SCA Romper con dos yml y tercer scan
  
 on:
   push:
@@ -16,12 +16,21 @@ jobs:
       - name: Run Fluid Attacks SAST
         id: sast_scan
         run: |
+          set +e
           docker run --rm \
             -v "$PWD:/src" \
             fluidattacks/sast:latest \
             sast --strict scan /src/config.yaml
-
-          mv Fluid-Attacks-Results.csv Fluid-Attacks-Results-sast.csv
+          EXIT_CODE=$?
+          set -e
+ 
+          if [ -f Fluid-Attacks-Results.csv ]; then
+            mv Fluid-Attacks-Results.csv Fluid-Attacks-Results-sast.csv
+          else
+            echo "No se generó Fluid-Attacks-Results.csv en el SAST"
+          fi
+ 
+          exit $EXIT_CODE
 
       - name: Upload SAST CSV
         if: always()
@@ -40,12 +49,21 @@ jobs:
       - name: Run Fluid Attacks SCA
         id: sca_scan
         run: |
+          set +e
           docker run --rm \
             -v "$PWD:/src" \
             fluidattacks/sca:latest \
             sca --strict scan /src/config.yaml
+          EXIT_CODE=$?
+          set -e
 
-          mv Fluid-Attacks-Results.csv Fluid-Attacks-Results-sca.csv
+          if [ -f Fluid-Attacks-Results.csv ]; then
+            mv Fluid-Attacks-Results.csv Fluid-Attacks-Results-sca.csv
+          else
+            echo "No se generó Fluid-Attacks-Results.csv en el SCA"
+          fi
+ 
+          exit $EXIT_CODE
 
       - name: Upload SCA CSV
         if: always()
