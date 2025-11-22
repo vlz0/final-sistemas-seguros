@@ -1,4 +1,4 @@
-name: SCA Sin Romper
+name: SAST y SCA Romper
  
 on:
   push:
@@ -6,6 +6,21 @@ on:
   workflow_dispatch:
  
 jobs:
+  sast-scan:
+    name: Fluid Attacks SAST
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run Fluid Attacks SAST
+        id: sast_scan
+        continue-on-error: true
+        run: |
+          docker run --rm \
+            -v "$PWD:/src" \
+            fluidattacks/sast:latest \
+            sast --strict scan /src
+
   sca-scan:
     name: Fluid Attacks SCA
     runs-on: ubuntu-latest
@@ -19,4 +34,4 @@ jobs:
           docker run --rm \
             -v "$PWD:/src" \
             fluidattacks/sca:latest \
-            sca scan /src
+            sca --strict scan /src
