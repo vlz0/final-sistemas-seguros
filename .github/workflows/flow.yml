@@ -1,4 +1,4 @@
-name: SAST y SCA Romper
+name: SAST y SCA Romper con dos yml
  
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
           docker run --rm \
             -v "$PWD:/src" \
             fluidattacks/sast:latest \
-            sast --strict scan .
+            sast --strict scan /src/config.yaml
 
   sca-scan:
     name: Fluid Attacks SCA
@@ -32,4 +32,4 @@ jobs:
           docker run --rm \
             -v "$PWD:/src" \
             fluidattacks/sca:latest \
-            sca --strict scan .
+            sca --strict scan /src/config.yaml

@@ -1,0 +1,29 @@
+namespace: Configuracion Flujo
+working_dir: .
+language: EN
+ 
+output:
+  file_path: ./Fluid-Attacks-Results.csv
+  format: CSV
+ 
+path:
+  include:
+    - .
+ 
+sast:
+  include:
+    - .
+  exclude:
+    - ./node_modules
+    - ./tests
+    - ./dist
+    - ./build
+ 
+sca:
+  include:
+    - .
+  exclude:
+    - ./node_modules
+    - ./tests
+    - ./dist
+    - ./build
